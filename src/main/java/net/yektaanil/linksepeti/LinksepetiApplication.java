@@ -1,4 +1,4 @@
-package com.yektaanil.linksepeti;
+package net.yektaanil.linksepeti;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
