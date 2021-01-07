@@ -15,6 +15,10 @@ public final class DateUtil {
         return LocalDateTime.now();
     }
 
+    public static LocalDate getCurrentLocalDate() {
+        return LocalDate.now();
+    }
+
     public static LocalDate parseLocalDate(String date) {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
