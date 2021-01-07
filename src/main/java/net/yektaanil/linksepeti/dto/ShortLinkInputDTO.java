@@ -1,20 +1,25 @@
 package net.yektaanil.linksepeti.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.URL;
 
-public class ShortUrlDTO {
+public class ShortLinkInputDTO {
 
+
+    @URL
     private String url;
-    private LocalDateTime expiryDate;
+    @NotNull
+    private LocalDate expiryDate;
 
 
-    public ShortUrlDTO(String url, LocalDateTime expiryDate) {
+    public ShortLinkInputDTO(String url, LocalDate expiryDate) {
         super();
         this.url = url;
         this.expiryDate = expiryDate;
     }
 
-    public ShortUrlDTO() {
+    public ShortLinkInputDTO() {
         super();
     }
 
@@ -26,11 +31,11 @@ public class ShortUrlDTO {
         this.url = url;
     }
 
-    public LocalDateTime getExpiryDate() {
+    public LocalDate getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(LocalDateTime expiryDate) {
+    public void setExpiryDate(LocalDate expiryDate) {
         this.expiryDate = expiryDate;
     }
 

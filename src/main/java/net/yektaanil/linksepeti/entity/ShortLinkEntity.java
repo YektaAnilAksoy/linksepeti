@@ -6,13 +6,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@Table(name = "ShortUrl")
-public class ShortUrlEntity extends BaseEntity {
+@Table(name = "ShortLink", indexes = {@Index(columnList = "HashCode", unique = true)})
+public class ShortLinkEntity extends BaseEntity {
 
     private static final long serialVersionUID = -3150350189080739231L;
 
@@ -21,27 +23,28 @@ public class ShortUrlEntity extends BaseEntity {
     @Column(name = "Id")
     private Long id;
 
+    @URL
     @NotNull(message = "url cannot be null")
     @Column(name = "Url")
     private String url;
 
-    @NotNull(message = "hashedId cannot be null")
-    @Column(name = "HashedId")
-    private String hashedId;
+    @NotNull(message = "hashCode cannot be null")
+    @Column(name = "HashCode", unique = true)
+    private String hashCode;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "ExpiryDate")
     private LocalDate expiryDate;
 
 
-    public ShortUrlEntity(Long id, String url, String hashedId, LocalDate expiryDate) {
+    public ShortLinkEntity(Long id, String url, String hashCode, LocalDate expiryDate) {
         this.id = id;
         this.url = url;
-        this.hashedId = hashedId;
+        this.hashCode = hashCode;
         this.expiryDate = expiryDate;
     }
 
-    public ShortUrlEntity() {}
+    public ShortLinkEntity() {}
 
     public Long getId() {
         return id;
@@ -59,12 +62,12 @@ public class ShortUrlEntity extends BaseEntity {
         this.url = url;
     }
 
-    public String getHashedId() {
-        return hashedId;
+    public String getHashCode() {
+        return hashCode;
     }
 
-    public void setHashedId(String hashedId) {
-        this.hashedId = hashedId;
+    public void setHashCode(String hashCode) {
+        this.hashCode = hashCode;
     }
 
     public LocalDate getExpiryDate() {
@@ -78,10 +81,9 @@ public class ShortUrlEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        return "ShortUrlEntity [id=" + id + ", url=" + url + ", hashedId=" + hashedId
+        return "ShortUrlEntity [id=" + id + ", url=" + url + ", hashCode=" + hashCode
                 + ", expiryDate=" + expiryDate + ", getStatus()=" + getStatus()
                 + ", getCreateDate()=" + getCreateDate() + ", getCreatedBy()=" + getCreatedBy()
-                + ", getUpdateDate()=" + getUpdateDate() + ", getUpdatedBy()=" + getUpdatedBy()
                 + "]";
     }
 }

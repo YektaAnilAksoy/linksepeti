@@ -1,4 +1,4 @@
-package com.yektaanil.linksepeti.entity;
+package net.yektaanil.linksepeti.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -12,9 +12,9 @@ import javax.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import net.yektaanil.linksepeti.common.DateUtil;
-import net.yektaanil.linksepeti.entity.ShortUrlEntity;
+import net.yektaanil.linksepeti.entity.ShortLinkEntity;
 
-class ShortUrlEntityTest {
+class ShortLinkEntityTest {
 
     private Validator validator;
 
@@ -26,27 +26,27 @@ class ShortUrlEntityTest {
 
     @Test
     void testCreateShortUrlEntitySuccess() {
-        ShortUrlEntity shortUrlEntity = new ShortUrlEntity();
+        ShortLinkEntity shortUrlEntity = new ShortLinkEntity();
         shortUrlEntity.setUrl("http://www.google.com");
         shortUrlEntity.setExpiryDate(DateUtil.parseLocalDate("2040-01-12"));
-        shortUrlEntity.setHashedId("qwerty");
+        shortUrlEntity.setHashCode("qwerty");
         assertEquals("http://www.google.com", shortUrlEntity.getUrl());
         assertEquals("2040-01-12", shortUrlEntity.getExpiryDate().toString());
-        assertEquals("qwerty", shortUrlEntity.getHashedId());
+        assertEquals("qwerty", shortUrlEntity.getHashCode());
 
-        Set<ConstraintViolation<ShortUrlEntity>> violations = validator.validate(shortUrlEntity);
+        Set<ConstraintViolation<ShortLinkEntity>> violations = validator.validate(shortUrlEntity);
         assertTrue(violations.isEmpty());
     }
 
     @Test
     void testCreateShortUrlEntityFail() {
-        ShortUrlEntity shortUrlEntity = new ShortUrlEntity();
+        ShortLinkEntity shortUrlEntity = new ShortLinkEntity();
         shortUrlEntity.setExpiryDate(DateUtil.parseLocalDate("2400-12-01"));
         assertEquals("2400-12-01", shortUrlEntity.getExpiryDate().toString());
 
-        Set<ConstraintViolation<ShortUrlEntity>> violations = validator.validate(shortUrlEntity);
+        Set<ConstraintViolation<ShortLinkEntity>> violations = validator.validate(shortUrlEntity);
         assertFalse(violations.isEmpty());
-        assertNull(shortUrlEntity.getHashedId());
+        assertNull(shortUrlEntity.getHashCode());
         assertNull(shortUrlEntity.getUrl());
     }
 }
