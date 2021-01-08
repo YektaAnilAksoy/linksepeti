@@ -76,12 +76,22 @@ class ShortLinkServiceTest {
     }
 
     @Test
-    void shouldThrowHashNotFoundWhenHashNotExist() {
+    void shouldThrowLinkNotFoundExceptionWhenLinkNotExist() {
+        when(shortLinkRepository.findByHashCode(anyString())).thenReturn(Optional.ofNullable(null));
 
+        Assertions.assertThrows(LinkNotFoundException.class, () -> {
+            shortUrlService.getByHashCode("qwerty123");
+        });
     }
 
     @Test
-    void shouldThrowInvalidUrlWhenCreate() {
+    void shouldThrowHashCodeExpiredExceptionWhenHashCodeExpired() {
 
+        when(shortLinkRepository.findByHashCode(anyString()))
+                .thenReturn(Optional.of(ShortLinkUtil.getExpiredShortLink()));
+
+        Assertions.assertThrows(HashCodeExpiredException.class, () -> {
+            shortUrlService.getByHashCode("qwerty123");
+        });
     }
 }
