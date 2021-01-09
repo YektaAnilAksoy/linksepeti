@@ -28,7 +28,7 @@ import net.yektaanil.linksepeti.util.ShortLinkUtil;
 class ShortLinkServiceTest {
 
     @InjectMocks
-    private ShortLinkService shortUrlService = new ShortLinkServiceImpl();
+    private ShortLinkService shortLinkService = new ShortLinkServiceImpl();
 
     @Mock
     private ShortLinkRepository shortLinkRepository;
@@ -36,11 +36,11 @@ class ShortLinkServiceTest {
     @Spy
     private ModelMapper modelMapper;
 
-    private ShortLinkEntity shortUrlEntity;
+    private ShortLinkEntity shortLinkEntity;
 
     @BeforeEach
     void setUp() {
-        shortUrlEntity = ShortLinkUtil.getShortLink();
+        shortLinkEntity = ShortLinkUtil.getShortLink();
     }
 
     @Test
@@ -48,19 +48,19 @@ class ShortLinkServiceTest {
             throws HashCodeExpiredException, LinkNotFoundException {
 
         when(shortLinkRepository.findByHashCode(anyString()))
-                .thenReturn(Optional.of(shortUrlEntity));
+                .thenReturn(Optional.of(shortLinkEntity));
 
-        ShortLinkOutputDTO shortLinkOutputDTO = shortUrlService.getByHashCode("qwerty123");
+        String actualUrl = shortLinkService.getByHashCode("qwerty123");
 
-        assertEquals(shortUrlEntity.getUrl(), shortLinkOutputDTO.getUrl());
+        assertEquals(shortLinkEntity.getUrl(), actualUrl);
     }
 
     @Test
     void shouldCreateHashedUrlSuccessfully() throws HashCodeCollisonException {
         final ShortLinkInputDTO shortUrlDTO = ShortLinkUtil.getShortLinkDTO();
-        when(shortLinkRepository.save(any())).thenReturn(shortUrlEntity);
+        when(shortLinkRepository.save(any())).thenReturn(shortLinkEntity);
 
-        final ShortLinkOutputDTO hashedUrlDTO = shortUrlService.createShortUrl(shortUrlDTO);
+        final ShortLinkOutputDTO hashedUrlDTO = shortLinkService.createShortUrl(shortUrlDTO);
 
         assertNotNull(hashedUrlDTO.getUrl());
     }
@@ -71,7 +71,7 @@ class ShortLinkServiceTest {
                 .thenReturn(Optional.of(ShortLinkUtil.getExpiredShortLink()));
 
         Assertions.assertThrows(HashCodeExpiredException.class, () -> {
-            shortUrlService.getByHashCode("qwerty123");
+            shortLinkService.getByHashCode("qwerty123");
         });
     }
 
@@ -80,7 +80,7 @@ class ShortLinkServiceTest {
         when(shortLinkRepository.findByHashCode(anyString())).thenReturn(Optional.ofNullable(null));
 
         Assertions.assertThrows(LinkNotFoundException.class, () -> {
-            shortUrlService.getByHashCode("qwerty123");
+            shortLinkService.getByHashCode("qwerty123");
         });
     }
 
@@ -91,7 +91,7 @@ class ShortLinkServiceTest {
                 .thenReturn(Optional.of(ShortLinkUtil.getExpiredShortLink()));
 
         Assertions.assertThrows(HashCodeExpiredException.class, () -> {
-            shortUrlService.getByHashCode("qwerty123");
+            shortLinkService.getByHashCode("qwerty123");
         });
     }
 }

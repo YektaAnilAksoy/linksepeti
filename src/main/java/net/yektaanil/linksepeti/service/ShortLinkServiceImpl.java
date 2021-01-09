@@ -3,8 +3,6 @@ package net.yektaanil.linksepeti.service;
 import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import net.yektaanil.linksepeti.common.Constants;
@@ -19,9 +17,9 @@ import net.yektaanil.linksepeti.repository.ShortLinkRepository;
 
 @Service
 public class ShortLinkServiceImpl implements ShortLinkService {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private static final Integer MAX_TRY = 10;
     private static final Integer HASH_SIZE = 8;
+
     @Autowired
     private ModelMapper modelMapper;
 
@@ -29,13 +27,13 @@ public class ShortLinkServiceImpl implements ShortLinkService {
     private ShortLinkRepository shortLinkRepository;
 
     @Override
-    public ShortLinkOutputDTO getByHashCode(String hashCode)
+    public String getByHashCode(String hashCode)
             throws HashCodeExpiredException, LinkNotFoundException {
         Optional<ShortLinkEntity> shortLinkOptional = shortLinkRepository.findByHashCode(hashCode);
         if (shortLinkOptional.isPresent()) {
             ShortLinkEntity shortLinkEntity = shortLinkOptional.get();
             if (shortLinkEntity.getExpiryDate().isAfter(DateUtil.getCurrentLocalDate())) {
-                return modelMapper.map(shortLinkEntity, ShortLinkOutputDTO.class);
+                return shortLinkEntity.getUrl();
             }
             throw new HashCodeExpiredException(Constants.HASH_CODE_EXPIRED);
         }
@@ -45,7 +43,6 @@ public class ShortLinkServiceImpl implements ShortLinkService {
     @Override
     public ShortLinkOutputDTO createShortUrl(ShortLinkInputDTO shortLinkInputDTO)
             throws HashCodeCollisonException {
-        log.info("createShortUrl -> shortLinkInputDTO: {}", shortLinkInputDTO);
         ShortLinkEntity shortLinkEntity = modelMapper.map(shortLinkInputDTO, ShortLinkEntity.class);
 
         shortLinkEntity.setHashCode(createHashCode());

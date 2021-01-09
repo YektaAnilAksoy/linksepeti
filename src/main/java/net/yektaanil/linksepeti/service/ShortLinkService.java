@@ -9,8 +9,7 @@ import net.yektaanil.linksepeti.exception.LinkNotFoundException;
 
 public interface ShortLinkService {
 
-    ShortLinkOutputDTO getByHashCode(String hashCode)
-            throws HashCodeExpiredException, LinkNotFoundException;
+    String getByHashCode(String hashCode) throws HashCodeExpiredException, LinkNotFoundException;
 
     ShortLinkOutputDTO createShortUrl(ShortLinkInputDTO shortLinkInputDTO)
             throws HashCodeCollisonException;
