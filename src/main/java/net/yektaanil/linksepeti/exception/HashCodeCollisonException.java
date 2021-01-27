@@ -8,10 +8,6 @@ public class HashCodeCollisonException extends RuntimeException {
 
     private static final long serialVersionUID = -920779425654899959L;
 
-    public HashCodeCollisonException() {
-
-    }
-
     public HashCodeCollisonException(String msg) {
         super(msg);
     }
