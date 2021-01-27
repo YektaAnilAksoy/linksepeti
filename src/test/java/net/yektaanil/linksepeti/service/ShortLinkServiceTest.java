@@ -18,7 +18,6 @@ import org.modelmapper.ModelMapper;
 import net.yektaanil.linksepeti.dto.ShortLinkInputDTO;
 import net.yektaanil.linksepeti.dto.ShortLinkOutputDTO;
 import net.yektaanil.linksepeti.entity.ShortLinkEntity;
-import net.yektaanil.linksepeti.exception.HashCodeCollisonException;
 import net.yektaanil.linksepeti.exception.HashCodeExpiredException;
 import net.yektaanil.linksepeti.exception.LinkNotFoundException;
 import net.yektaanil.linksepeti.repository.ShortLinkRepository;
@@ -44,8 +43,7 @@ class ShortLinkServiceTest {
     }
 
     @Test
-    void shouldReturnHashedUrlSuccessfully()
-            throws HashCodeExpiredException, LinkNotFoundException {
+    void shouldReturnHashedUrlSuccessfully() {
 
         when(shortLinkRepository.findByHashCode(anyString()))
                 .thenReturn(Optional.of(shortLinkEntity));
@@ -56,7 +54,7 @@ class ShortLinkServiceTest {
     }
 
     @Test
-    void shouldCreateHashedUrlSuccessfully() throws HashCodeCollisonException {
+    void shouldCreateHashedUrlSuccessfully() {
         final ShortLinkInputDTO shortUrlDTO = ShortLinkUtil.getShortLinkDTO();
         when(shortLinkRepository.save(any())).thenReturn(shortLinkEntity);
 

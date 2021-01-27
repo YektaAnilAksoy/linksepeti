@@ -27,8 +27,7 @@ public class ShortLinkServiceImpl implements ShortLinkService {
     private ShortLinkRepository shortLinkRepository;
 
     @Override
-    public String getByHashCode(String hashCode)
-            throws HashCodeExpiredException, LinkNotFoundException {
+    public String getByHashCode(String hashCode) {
         Optional<ShortLinkEntity> shortLinkOptional = shortLinkRepository.findByHashCode(hashCode);
         if (shortLinkOptional.isPresent()) {
             ShortLinkEntity shortLinkEntity = shortLinkOptional.get();
@@ -41,8 +40,7 @@ public class ShortLinkServiceImpl implements ShortLinkService {
     }
 
     @Override
-    public ShortLinkOutputDTO createShortUrl(ShortLinkInputDTO shortLinkInputDTO)
-            throws HashCodeCollisonException {
+    public ShortLinkOutputDTO createShortUrl(ShortLinkInputDTO shortLinkInputDTO) {
         ShortLinkEntity shortLinkEntity = modelMapper.map(shortLinkInputDTO, ShortLinkEntity.class);
 
         shortLinkEntity.setHashCode(createHashCode());
@@ -53,7 +51,7 @@ public class ShortLinkServiceImpl implements ShortLinkService {
         return shortLinkRepository.existsByHashCode(hashCode);
     }
 
-    private String createHashCode() throws HashCodeCollisonException {
+    private String createHashCode() {
         for (int i = 0; i < MAX_TRY; i++) {
             final String hashCode = createRandomString();
             if (!ishashCodeExistence(hashCode)) {
