@@ -1,6 +1,5 @@
 package net.yektaanil.linksepeti.service;
 
-import java.util.Optional;
 import net.yektaanil.linksepeti.common.Constants;
 import net.yektaanil.linksepeti.common.DateUtil;
 import net.yektaanil.linksepeti.dto.ShortLinkInputDTO;
@@ -15,16 +14,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ShortLinkServiceImpl implements ShortLinkService {
   @Value("${app.localname}")
   private String localName;
 
-  @Autowired private ModelMapper modelMapper;
+  private ModelMapper modelMapper;
+  private ShortLinkRepository shortLinkRepository;
+  private Hashids hashids;
 
-  @Autowired private ShortLinkRepository shortLinkRepository;
-
-  @Autowired private Hashids hashids;
+  @Autowired
+  public ShortLinkServiceImpl(
+      ModelMapper modelMapper, ShortLinkRepository shortLinkRepository, Hashids hashids) {
+    this.modelMapper = modelMapper;
+    this.shortLinkRepository = shortLinkRepository;
+    this.hashids = hashids;
+  }
 
   @Override
   public String getByHashCode(String hashCode) {
