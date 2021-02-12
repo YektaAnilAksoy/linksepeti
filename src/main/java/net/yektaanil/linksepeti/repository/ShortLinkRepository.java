@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ShortLinkRepository extends CrudRepository<ShortLinkEntity, Long> {
 
-  Optional<ShortLinkEntity> findByHashCode(String hashCode);
+    Optional<ShortLinkEntity> findByHashCode(String hashCode);
 
-  @Modifying
-  @Query("update ShortLinkEntity sl set sl.hashCode = :hashCode where sl.id = :id")
-  void updateHash(@Param(value = "id") Long id, @Param(value = "hashCode") String hashCode);
+    @Modifying
+    @Query("update ShortLinkEntity sl set sl.hashCode = :hashCode where sl.id = :id")
+    void updateHash(@Param(value = "id") Long id, @Param(value = "hashCode") String hashCode);
 }

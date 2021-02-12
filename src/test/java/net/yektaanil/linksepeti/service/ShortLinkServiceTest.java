@@ -1,5 +1,12 @@
 package net.yektaanil.linksepeti.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 import net.yektaanil.linksepeti.dto.ShortLinkInputDTO;
 import net.yektaanil.linksepeti.dto.ShortLinkOutputDTO;
 import net.yektaanil.linksepeti.entity.ShortLinkEntity;
@@ -18,68 +25,64 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class ShortLinkServiceTest {
 
-  @Mock private ShortLinkRepository shortLinkRepository;
-  @Spy private ModelMapper modelMapper;
-  @Spy private Hashids hashids;
+    @Mock
+    private ShortLinkRepository shortLinkRepository;
+    @Spy
+    private ModelMapper modelMapper;
+    @Spy
+    private Hashids hashids;
 
-  @InjectMocks
-  private final ShortLinkService shortLinkService =
-      new ShortLinkServiceImpl(modelMapper, shortLinkRepository, hashids);
+    @InjectMocks
+    private final ShortLinkService shortLinkService =
+            new ShortLinkServiceImpl(modelMapper, shortLinkRepository, hashids);
 
-  private ShortLinkEntity shortLinkEntity;
+    private ShortLinkEntity shortLinkEntity;
 
-  @BeforeEach
-  void setUp() {
-    shortLinkEntity = ShortLinkUtil.getShortLink();
-  }
+    @BeforeEach
+    void setUp() {
+        shortLinkEntity = ShortLinkUtil.getShortLink();
+    }
 
-  @Test
-  void shouldReturnHashedUrlSuccessfully() {
+    @Test
+    void shouldReturnHashedUrlSuccessfully() {
 
-    when(shortLinkRepository.findByHashCode(anyString())).thenReturn(Optional.of(shortLinkEntity));
+        when(shortLinkRepository.findByHashCode(anyString()))
+                .thenReturn(Optional.of(shortLinkEntity));
 
-    String actualUrl = shortLinkService.getByHashCode("qwerty123");
+        String actualUrl = shortLinkService.getByHashCode("qwerty123");
 
-    assertEquals(shortLinkEntity.getUrl(), actualUrl);
-  }
+        assertEquals(shortLinkEntity.getUrl(), actualUrl);
+    }
 
-  @Test
-  void shouldCreateHashedUrlSuccessfully() {
-    final ShortLinkInputDTO shortUrlDTO = ShortLinkUtil.getShortLinkDTO();
-    shortLinkEntity.setId(1L);
-    when(shortLinkRepository.save(any())).thenReturn(shortLinkEntity);
+    @Test
+    void shouldCreateHashedUrlSuccessfully() {
+        final ShortLinkInputDTO shortUrlDTO = ShortLinkUtil.getShortLinkDTO();
+        shortLinkEntity.setId(1L);
+        when(shortLinkRepository.save(any())).thenReturn(shortLinkEntity);
 
-    final ShortLinkOutputDTO hashedUrlDTO = shortLinkService.createShortUrl(shortUrlDTO);
+        final ShortLinkOutputDTO hashedUrlDTO = shortLinkService.createShortUrl(shortUrlDTO);
 
-    assertNotNull(hashedUrlDTO.getUrl());
-  }
+        assertNotNull(hashedUrlDTO.getUrl());
+    }
 
-  @Test
-  void shouldThrowLinkNotFoundExceptionWhenLinkNotExist() {
-    when(shortLinkRepository.findByHashCode(anyString())).thenReturn(Optional.ofNullable(null));
+    @Test
+    void shouldThrowLinkNotFoundExceptionWhenLinkNotExist() {
+        when(shortLinkRepository.findByHashCode(anyString())).thenReturn(Optional.ofNullable(null));
 
-    Assertions.assertThrows(
-        LinkNotFoundException.class, () -> shortLinkService.getByHashCode("qwerty123"));
-  }
+        Assertions.assertThrows(
+                LinkNotFoundException.class, () -> shortLinkService.getByHashCode("qwerty123"));
+    }
 
-  @Test
-  void shouldThrowHashCodeExpiredExceptionWhenHashCodeExpired() {
+    @Test
+    void shouldThrowHashCodeExpiredExceptionWhenHashCodeExpired() {
 
-    when(shortLinkRepository.findByHashCode(anyString()))
-        .thenReturn(Optional.of(ShortLinkUtil.getExpiredShortLink()));
+        when(shortLinkRepository.findByHashCode(anyString()))
+                .thenReturn(Optional.of(ShortLinkUtil.getExpiredShortLink()));
 
-    Assertions.assertThrows(
-        HashCodeExpiredException.class, () -> shortLinkService.getByHashCode("qwerty123"));
-  }
+        Assertions.assertThrows(
+                HashCodeExpiredException.class, () -> shortLinkService.getByHashCode("qwerty123"));
+    }
 }

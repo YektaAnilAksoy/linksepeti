@@ -1,20 +1,21 @@
 package net.yektaanil.linksepeti.entity;
 
 import static net.yektaanil.linksepeti.common.Util.isNullOrEmpty;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
-import org.springframework.format.annotation.DateTimeFormat;
 import net.yektaanil.linksepeti.common.DateUtil;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @MappedSuperclass
 public class BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 8485815568313405602L;
 
-    @Column(name = "Status", length = 1, nullable = false, columnDefinition = "integer default 1")
+    @Column(name = "Status", length = 1, columnDefinition = "integer default 1")
     private Integer status;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -24,7 +25,8 @@ public class BaseEntity implements Serializable {
     @Column(name = "CreatedBy", nullable = false)
     private String createdBy;
 
-    public BaseEntity() {}
+    public BaseEntity() {
+    }
 
     @PrePersist
     public void prePersist() {

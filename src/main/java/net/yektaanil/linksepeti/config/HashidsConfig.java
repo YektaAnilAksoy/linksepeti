@@ -8,11 +8,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HashidsConfig {
 
-  @Value("${hashids.salt}")
-  private String salt;
+    @Value("${hashids.salt}")
+    private String salt;
 
-  @Bean(name = "hashids")
-  public Hashids hashids() {
-    return new Hashids(salt);
-  }
+    @Bean(name = "hashids")
+    public Hashids hashids() {
+        return new Hashids(salt);
+    }
 }
