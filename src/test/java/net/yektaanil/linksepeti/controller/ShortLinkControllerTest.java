@@ -90,7 +90,7 @@ class ShortLinkControllerTest {
     void testGetUrlByHashCode() throws Exception {
         when(ShortLinkService.getByHashCode(anyString()))
                 .thenReturn("www.google.com");
-        mockMvc.perform(MockMvcRequestBuilders.get(URI + "/123")
+        mockMvc.perform(MockMvcRequestBuilders.get(GET_URL_END_POINT, "123")
                 .characterEncoding("UTF-8")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -98,13 +98,4 @@ class ShortLinkControllerTest {
                 .andReturn();
     }
 
-    @Test
-    void testGetUrlByHashCodeThenThrowNotFound() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(GET_URL_END_POINT, "xry")
-                .characterEncoding("UTF-8")
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound())
-                .andReturn();
-    }
 }
